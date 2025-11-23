@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AP31 Home Inspections - Dynamic Theme Scroll</title>
+    <title>AP31 Home Inspections - Dynamic Gradient Background</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Configure Tailwind and Font -->
@@ -12,10 +13,15 @@
             theme: {
                 extend: {
                     colors: {
-                        // Fixed brand colors
+                        // Fixed brand colors (used for text, buttons, and borders)
                         'primary': '#1D4ED8', // Deep Blue
                         'secondary': '#06B6D4', // Cyan/Teal
                         'accent': '#FBBF24', // Amber for highlights
+                        // Colors for the dynamic background gradient stops
+                        'grad-blue': '#1D4ED8',
+                        'grad-violet': '#8B5CF6',
+                        'grad-pink': '#EC4899',
+                        'grad-teal': '#06B6D4',
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
@@ -27,439 +33,425 @@
     <!-- Use Inter font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <style>
-        /* BASE VARIABLES AND THEME DEFINITIONS */
-        :root {
-            /* Primary Brand Colors remain fixed */
-            --primary-color: #1D4ED8;
-            --secondary-color: #06B6D4;
-            --accent-color: #FBBF24;
-
-            /* Light Theme Endpoints (White/Light Gray) */
-            --light-bg-main-r: 255; --light-bg-main-g: 255; --light-bg-main-b: 255; /* white */
-            --light-bg-card-r: 255; --light-bg-card-g: 255; --light-bg-card-b: 255; /* white */
-            --light-text-main-r: 55; --light-text-main-g: 65; --light-text-main-b: 81; /* gray-700 */
-            --light-text-heading-r: 17; --light-text-heading-g: 24; --light-text-heading-b: 39; /* gray-900 */
-            --shadow-light-r: 0; --shadow-light-g: 0; --shadow-light-b: 0; /* black */
-
-            /* Dark Theme Endpoints (Dark Slate/Near Black) */
-            --dark-bg-main-r: 17; --dark-bg-main-g: 24; --dark-bg-main-b: 39; /* Dark Blue-Gray */
-            --dark-bg-card-r: 39; --dark-bg-card-g: 40; --dark-bg-card-b: 48; /* Dark Slate */
-            --dark-text-main-r: 209; --dark-text-main-g: 213; --dark-text-main-b: 219; /* gray-300 */
-            --dark-text-heading-r: 255; --dark-text-heading-g: 255; --dark-text-heading-b: 255; /* white */
-            --shadow-dark-r: 255; --shadow-dark-g: 255; --shadow-dark-b: 255; /* white */
-
-            /* Dynamic CSS Variables - Initialized to Light theme */
-            --bg-main: rgb(var(--light-bg-main-r), var(--light-bg-main-g), var(--light-bg-main-b));
-            --bg-card: rgb(var(--light-bg-card-r), var(--light-bg-card-g), var(--light-bg-card-b));
-            --text-main: rgb(var(--light-text-main-r), var(--light-text-main-g), var(--light-text-main-b));
-            --text-heading: rgb(var(--light-text-heading-r), var(--light-text-heading-g), var(--light-text-heading-b));
-            --shadow-color-r: var(--shadow-light-r);
-            --shadow-color-g: var(--shadow-light-g);
-            --shadow-color-b: var(--shadow-light-b);
-        }
-
-        /* TRANSITION STYLES */
+        /* BASE STYLES & CONTRAST */
         html {
             scroll-behavior: smooth;
         }
         body {
-            /* This controls the background color on the "sides" and between content blocks */
-            transition: background-color 0.1s linear, color 0.1s linear; 
+            /* Smooth background transition is handled by CSS custom property update */
+            transition: background-color 0.8s ease; 
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
+            
+            /* Initial fixed background color and high-contrast text */
+            background-color: #1D4ED8; /* Will be overwritten by JS gradient */
+            color: #F8FAFC; /* Light text for contrast against the dark/vibrant gradient background */
+            min-height: 200vh; /* Ensure there is enough vertical space to scroll for testing */
         }
 
-        /* Class to ensure any section background uses the dynamic main color */
-        .main-section-bg {
-            background-color: var(--bg-main) !important;
-            transition: background-color 0.1s linear;
-        }
-
-        /* Elements using dynamic colors */
+        /* CARD/HEADER STYLES - Use a fixed white/light color to contrast with the dynamic body background */
         header {
-            background-color: var(--bg-card);
-            /* Dynamic shadow color based on scroll progress */
-            box-shadow: 0 10px 15px -3px rgba(var(--shadow-color-r), var(--shadow-color-g), var(--shadow-color-b), 0.1);
-            transition: background-color 0.1s linear, box-shadow 0.1s linear;
+            background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent White */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px); /* Add blur for a modern, floating effect */
+            -webkit-backdrop-filter: blur(8px);
         }
+
+        .header-text-link {
+            color: #1F2937; /* Dark text for header links */
+        }
+        .header-text-link:hover {
+            color: var(--primary-color);
+        }
+
         .card-bg {
-            background-color: var(--bg-card);
-            color: var(--text-main);
-            box-shadow: 0 10px 15px -3px rgba(var(--shadow-color-r), var(--shadow-color-g), var(--shadow-color-b), 0.05);
-            transition: background-color 0.1s linear, color 0.1s linear, box-shadow 0.1s linear;
+            background-color: rgba(255, 255, 255, 1); /* Solid White card background */
+            color: #1F2937; /* Dark text for card content */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s ease;
         }
+
         .heading-text {
-            color: var(--text-heading);
-            transition: color 0.1s linear;
+            color: #F8FAFC; /* White text for main headings on the body background */
+            transition: color 0.3s ease;
         }
         
-        /* Overrides for hardcoded Tailwind classes that need dynamic color */
-        .text-gray-700 { color: var(--text-main) !important; }
-        .text-gray-900 { color: var(--text-heading) !important; }
-        .border-gray-200, .border-gray-300 {
-             border-color: var(--text-main) !important; /* Use text color for subtle borders */
-             opacity: 0.1;
+        /* Specific Section Overrides - Use dark background for contact form area to ensure readability */
+        #contact {
+            background-color: #1F2937; /* Dark gray background for contact form */
+            color: #F8FAFC;
         }
-
-
-        /* Fixed colors (Footer, CTA banner) */
-        footer {
-            background-color: #111827; /* Fixed dark gray */
+        #contact .card-bg {
+            background-color: #374151; /* Slightly lighter card in contact section */
+            color: #F8FAFA;
         }
-        .bg-secondary {
-             background-color: var(--secondary-color) !important; 
+        #contact input, #contact select, #contact textarea {
+            background-color: #4B5563; /* Dark inputs */
+            color: #F8FAFA;
+            border-color: #6B7280;
         }
 
         /* --- Custom Styles for WhatsApp & Instagram Links --- */
+        /* These colors are fixed and should remain independent of the dynamic background */
         .whatsapp-link {
             color: #25D366 !important; /* WhatsApp Green */
         }
         .whatsapp-link:hover {
-            color: #128C7E !important; /* Darker WhatsApp Green on hover */
+            color: #128C7E !important; 
         }
         .instagram-link {
             color: #E1306C !important; /* Instagram Pink/Red */
         }
         .instagram-link:hover {
-            color: #C13584 !important; /* Instagram Purple on hover */
+            color: #C13584 !important; 
         }
+
+        /* Footer remains fixed dark color for stability */
+        footer {
+            background-color: #111827;
+        }
+
+        /* Dynamic background application */
+        #main-wrapper {
+            transition: background-image 0.8s ease;
+            min-height: 200vh;
+        }
+
     </style>
 </head>
 <body class="font-sans">
-    <!-- Navigation Header -->
-    <header class="sticky top-0 z-50 transition-colors duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <!-- Logo: Changed to full AP31 Home Inspections -->
-                <a href="#" class="text-3xl font-extrabold text-primary tracking-tight">
-                    AP31 Home Inspections
-                </a>
-                <!-- Desktop Nav Links -->
-                <nav class="hidden md:flex space-x-6 items-center">
-                    <a href="#home" class="text-lg font-medium hover:text-primary transition duration-300">Home</a>
-                    <a href="#services" class="text-lg font-medium hover:text-primary transition duration-300">Services</a>
-                    <a href="#testimonials" class="text-lg font-medium hover:text-primary transition duration-300">Reviews</a>
-                    <!-- Call Us Now Button -->
-                    <a href="tel:+917095886688" class="text-lg font-medium text-white bg-primary hover:bg-blue-700 py-2 px-4 rounded-full shadow-md transition duration-300 flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-10a2 2 0 01-2-2v-2.72a1 1 0 011-1z"></path></svg>
-                        Call Us Now
+    <div id="main-wrapper">
+        <!-- Navigation Header -->
+        <header class="sticky top-0 z-50 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <!-- Logo -->
+                    <a href="#" class="text-3xl font-extrabold text-primary tracking-tight">
+                        AP31 <span class="text-secondary text-2xl font-semibold">Home Inspections</span>
                     </a>
-                    <a href="#contact" class="text-lg font-medium text-gray-900 bg-accent hover:bg-amber-500 py-2 px-4 rounded-full shadow-md transition duration-300">Book Inspection</a>
-                </nav>
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-button" class="md:hidden p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5h18v2H3V5zm0 6h18v2H3v-2zm0 6h18v2H3v-2z" clip-rule="evenodd"></path></svg>
-                </button>
-            </div>
-        </div>
-        <!-- Mobile Menu (Hidden by default) -->
-        <div id="mobile-menu" class="hidden md:hidden card-bg border-t border-gray-200">
-            <nav class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">Home</a>
-                <a href="#services" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">Services</a>
-                <a href="#testimonials" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">Reviews</a>
-                <!-- Call Us Now link in mobile menu -->
-                <a href="tel:+917095886688" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 text-primary font-semibold">
-                    Call Us Now (+91 70958 86688)
-                </a>
-                <a href="#contact" class="block w-full text-center mt-4 text-base font-medium text-white bg-primary py-2 rounded-lg hover:bg-blue-700">Book Inspection</a>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section id="home" class="py-20 md:py-32">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="max-w-4xl mx-auto">
-                <h1 class="text-5xl md:text-6xl font-extrabold heading-text leading-tight mb-4">
-                    Secure Your Dream Home in <span class="text-primary">Visakhapatnam</span>
-                </h1>
-                <p class="text-xl text-opacity-80 mb-8">
-                    AP31 Home Inspections provides detailed, unbiased, and professional property assessments across Vizag. Know your investment before you commit.
-                </p>
-                <a href="#contact" class="inline-block bg-primary text-white text-xl font-semibold py-4 px-10 rounded-xl shadow-xl hover:bg-blue-700 transition duration-300 transform hover:scale-105">
-                    Schedule Your Inspection Today
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Inspection Info Carousel (Now uses dynamic main background) -->
-    <section id="about-inspection" class="py-12 main-section-bg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-center heading-text mb-8">The Value of Inspection</h2>
-            
-            <div class="relative w-full overflow-hidden rounded-2xl shadow-2xl h-[500px] md:h-[450px]">
-                <!-- Slides Container -->
-                <div id="carousel-slides" class="flex transition-transform duration-700 ease-in-out h-full">
-                    
-                    <!-- Slide 1: Why Inspection Important -->
-                    <div class="min-w-full h-full flex flex-col md:flex-row card-bg">
-                        <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-primary text-white">
-                            <h3 class="text-3xl font-bold mb-4">Why Is Inspection Important?</h3>
-                            <p class="text-lg opacity-95 leading-relaxed">
-                                A home is likely the biggest purchase of your life. While a property might look fresh painted, hidden defects in structure, electrical wiring, or dampness can cost lakhs in future repairs.
-                                <br><br>
-                                An inspection uncovers the "invisible" truth, protecting your investment and safety.
-                            </p>
-                        </div>
-                        <div class="md:w-1/2 h-full bg-gray-200 relative">
-                            <img src="https://placehold.co/800x600/1D4ED8/FFFFFF?text=Hidden+Defects+%26+Safety" class="object-cover w-full h-full" alt="Inspector checking for defects">
-                        </div>
-                    </div>
-
-                    <!-- Slide 2: What We Inspect -->
-                    <div class="min-w-full h-full flex flex-col md:flex-row card-bg">
-                        <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-secondary text-white">
-                            <h3 class="text-3xl font-bold mb-4">What Do We Inspect?</h3>
-                            <p class="text-lg opacity-95 mb-4">We perform a rigorous 100+ point check covering:</p>
-                            <ul class="list-disc list-inside text-lg space-y-2 font-medium">
-                                <li>Structural Integrity (Walls, Beams, Columns)</li>
-                                <li>Electrical Safety & Grounding</li>
-                                <li>Plumbing, Leakage & Seepage Detection</li>
-                                <li>Moisture Analysis & Dampness</li>
-                                <li>Doors, Windows & Finishing Quality</li>
-                            </ul>
-                        </div>
-                        <div class="md:w-1/2 h-full bg-gray-200 relative">
-                            <img src="https://placehold.co/800x600/06B6D4/FFFFFF?text=100%2B+Point+Checklist" class="object-cover w-full h-full" alt="Checklist concept">
-                        </div>
-                    </div>
-
-                    <!-- Slide 3: How It Helps Clients -->
-                    <div class="min-w-full h-full flex flex-col md:flex-row card-bg">
-                        <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-accent text-gray-900">
-                            <h3 class="text-3xl font-bold mb-4">How It Helps You?</h3>
-                            <p class="text-lg mb-4">Our report is your leverage. It empowers you to:</p>
-                            <ul class="list-disc list-inside text-lg space-y-3 font-semibold">
-                                <li>Negotiate a fairer property price.</li>
-                                <li>Request specific repairs before closing the deal.</li>
-                                <li>Avoid unexpected heavy expenses after moving in.</li>
-                                <li>Move in with absolute peace of mind.</li>
-                            </ul>
-                        </div>
-                        <div class="md:w-1/2 h-full bg-gray-200 relative">
-                            <img src="https://placehold.co/800x600/FBBF24/000000?text=Power+to+Negotiate" class="object-cover w-full h-full" alt="Handshake negotiation">
-                        </div>
-                    </div>
-
-                </div>
-                
-                <!-- Carousel Indicators -->
-                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3 z-10">
-                    <button class="carousel-indicator w-3 h-3 rounded-full bg-gray-300 transition duration-300" onclick="goToSlide(0)"></button>
-                    <button class="carousel-indicator w-3 h-3 rounded-full bg-gray-300 transition duration-300" onclick="goToSlide(1)"></button>
-                    <button class="carousel-indicator w-3 h-3 rounded-full bg-gray-300 transition duration-300" onclick="goToSlide(2)"></button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Services Section (Now uses dynamic main background) -->
-    <section id="services" class="py-16 md:py-24 main-section-bg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl font-bold text-center heading-text mb-12">Our Inspection Services</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-
-                <!-- Service Card 1 -->
-                <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-300 border-t-4 border-primary">
-                    <svg class="w-10 h-10 text-primary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                    <h3 class="text-xl font-semibold mb-3 heading-text">Pre-Purchase Residential</h3>
-                    <p class="opacity-80">Comprehensive inspection of all major systems (electrical, plumbing, HVAC, structure) for houses and villas.</p>
-                </div>
-                <!-- Service Card 2 -->
-                <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-300 border-t-4 border-secondary">
-                    <svg class="w-10 h-10 text-secondary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2zm2.5-4.5h7.001"></path></svg>
-                    <h3 class="text-xl font-semibold mb-3 heading-text">Apartment/Flat Inspection</h3>
-                    <p class="opacity-80">Detailed checking of interior finishes, moisture, and common area interfaces for high-rise flats in Vizag.</p>
-                </div>
-                <!-- Service Card 3 -->
-                <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-300 border-t-4 border-accent">
-                    <svg class="w-10 h-10 text-accent mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.24l-3.323-3.322c-.624-.624-1.636-.624-2.26 0L10 9.879 7.464 7.343c-.625-.625-1.636-.625-2.26 0L1.5 12.086 4.717 15.303c.624.624 1.636.624 2.26 0L10 12.879l2.536 2.536c.625.625 1.636.625 2.26 0l3.323-3.323c.624-.624.624-1.636 0-2.26z"></path></svg>
-                    <h3 class="text-xl font-semibold mb-3 heading-text">New Construction</h3>
-                    <p class="opacity-80">Phase inspections during construction or a final walkthrough for newly built homes.</p>
-                </div>
-                <!-- Service Card 4 -->
-                <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-300 border-t-4 border-primary">
-                    <svg class="w-10 h-10 text-primary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
-                    <h3 class="text-xl font-semibold mb-3 heading-text">Commercial Property</h3>
-                    <p class="opacity-80">Inspections for small-to-mid size commercial spaces, offices, and retail units.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Why Choose Us Section -->
-    <section id="whyus" class="bg-primary text-white py-16 md:py-24">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl font-bold text-center mb-12">Why AP31 Home Inspections is Vizag's First Choice</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <!-- Features List -->
-                <div class="space-y-6">
-                    <div class="flex items-start space-x-4">
-                        <svg class="flex-shrink-0 w-8 h-8 text-accent mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                        <div>
-                            <!-- Updated title to full name -->
-                            <h4 class="text-xl font-semibold">Local Expertise (AP31 Home Inspections)</h4>
-                            <p class="text-gray-200">Our inspectors understand the unique construction methods, climate challenges, and common issues specific to properties in Visakhapatnam.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-4">
-                        <svg class="flex-shrink-0 w-8 h-8 text-accent mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 6h12a1 1 0 110 2H4a1 1 0 010-2zm0 4h12a1 1 0 010 2H4a1 1 0 010-2zm0 4h12a1 1 0 010 2H4a1 1 0 010-2z"></path></svg>
-                        <div>
-                            <h4 class="text-xl font-semibold">Detailed Digital Reports</h4>
-                            <p class="text-gray-200">Receive a clear, easy-to-read digital report with photos and summary notes within 24 hours.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start space-x-4">
-                        <svg class="flex-shrink-0 w-8 h-8 text-accent mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.894.553L7.382 10l-1.382-2.453a1 1 0 10-1.789 1l2.5 4a1 1 0 001.789 0l2.5-4A1 1 0 0010 7z" clip-rule="evenodd"></path></svg>
-                        <div>
-                            <h4 class="text-xl font-semibold">Unbiased & Transparent</h4>
-                            <p class="text-gray-200">We work only for you, the client. Our reports are completely objective.</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Placeholder Image -->
-                <div class="hidden lg:block">
-                    <img src="https://placehold.co/600x400/06B6D4/FFFFFF?text=Vizag+Home+Safety" onerror="this.onerror=null; this.src='https://placehold.co/600x400/06B6D4/FFFFFF?text=Vizag+Home+Safety';" alt="Illustration of a house being inspected" class="rounded-xl shadow-2xl w-full h-auto object-cover">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section (Now uses dynamic main background) -->
-    <section id="testimonials" class="py-16 md:py-24 main-section-bg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl font-bold text-center heading-text mb-12">Hear From Our Happy Clients</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Testimonial 1 -->
-                <div class="card-bg p-6 rounded-xl border border-gray-200 shadow-lg">
-                    <div class="text-accent text-3xl font-serif mb-4">"</div>
-                    <p class="italic text-lg text-gray-700 mb-4">"The inspection saved us from a major plumbing issue in the flat we were about to buy in Madhurawada. Highly recommend AP31 Home Inspections!"</p>
-                    <p class="font-semibold text-primary">Suresh V.</p>
-                </div>
-                <!-- Testimonial 2 -->
-                <div class="card-bg p-6 rounded-xl border border-gray-200 shadow-lg">
-                    <div class="text-accent text-3xl font-serif mb-4">"</div>
-                    <p class="italic text-lg text-gray-700 mb-4">"We used them for a new villa construction check. Their thermal imaging caught a heat bridge we never would have noticed."</p>
-                    <p class="font-semibold text-primary">Varma C.</p>
-                </div>
-                <!-- Testimonial 3 -->
-                <div class="card-bg p-6 rounded-xl border border-gray-200 shadow-lg">
-                    <div class="text-accent text-3xl font-serif mb-4">"</div>
-                    <p class="italic text-lg text-gray-700 mb-4">"Detailed, punctual, and unbiased. The final commercial report allowed me to negotiate a better price for the office space."</p>
-                    <p class="font-semibold text-primary">Gautam R.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Banner Section -->
-    <section class="py-12 bg-secondary">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4">
-                Ready to Secure Your Investment?
-            </h2>
-            <p class="text-xl text-white opacity-90 mb-6 max-w-3xl mx-auto">
-                Don't leave your property purchase to chance. Get the expert assessment you need.
-            </p>
-            <a href="#contact" class="inline-block bg-accent text-gray-900 text-xl font-bold py-3 px-8 rounded-lg shadow-2xl hover:bg-amber-500 transition duration-300 transform hover:scale-105">
-                Start Your Inspection Request
-            </a>
-        </div>
-    </section>
-
-    <!-- Contact Section (Form Only) -->
-    <section id="contact" class="py-16 md:py-24 main-section-bg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl font-bold text-center heading-text mb-4">Book Your Inspection</h2>
-            <p class="text-center text-lg text-opacity-80 mb-12">Take the first step towards a secure purchase. Contact us today.</p>
-            
-            <!-- Centered Form -->
-            <div class="max-w-3xl mx-auto card-bg p-8 md:p-10 rounded-xl border border-gray-200">
-                <form id="inspection-form">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-opacity-80 mb-1">Full Name</label>
-                            <input type="text" id="name" required class="w-full px-4 py-2 border border-gray-300 card-bg rounded-lg focus:ring-primary focus:border-primary">
-                        </div>
-                        <div>
-                            <label for="phone" class="block text-sm font-medium text-opacity-80 mb-1">Phone Number</label>
-                            <input type="tel" id="phone" required class="w-full px-4 py-2 border border-gray-300 card-bg rounded-lg focus:ring-primary focus:border-primary" pattern="[0-9]{10}" title="Ten digits phone number">
-                        </div>
-                    </div>
-                    <div class="mb-6">
-                        <label for="email" class="block text-sm font-medium text-opacity-80 mb-1">Email Address</label>
-                        <input type="email" id="email" required class="w-full px-4 py-2 border border-gray-300 card-bg rounded-lg focus:ring-primary focus:border-primary">
-                    </div>
-                    <div class="mb-6">
-                        <label for="property-type" class="block text-sm font-medium text-opacity-80 mb-1">Type of Property</label>
-                        <select id="property-type" required class="w-full px-4 py-2 border border-gray-300 card-bg rounded-lg focus:ring-primary focus:border-primary">
-                            <option value="" disabled selected>Select Inspection Type</option>
-                            <option value="Residential House/Villa">Residential House/Villa</option>
-                            <option value="Apartment/Flat">Apartment/Flat</option>
-                            <option value="New Construction">New Construction</option>
-                            <option value="Commercial Space">Commercial Space</option>
-                        </select>
-                    </div>
-                    <div class="mb-6">
-                        <label for="message" class="block text-sm font-medium text-opacity-80 mb-1">Inspection Location / Details</label>
-                        <textarea id="message" rows="4" required class="w-full px-4 py-2 border border-gray-300 card-bg rounded-lg focus:ring-primary focus:border-primary" placeholder="E.g., 3-BHK Flat in Madhurawada"></textarea>
-                    </div>
-                    <button type="submit" id="submit-button" class="w-full bg-accent text-gray-900 text-lg font-bold py-3 rounded-lg hover:bg-amber-500 transition duration-300 transform hover:scale-[1.01] shadow-md">
-                        Submit Booking Request
+                    <!-- Desktop Nav Links -->
+                    <nav class="hidden md:flex space-x-6 items-center">
+                        <a href="#home" class="text-lg font-medium header-text-link hover:text-primary transition duration-300">Home</a>
+                        <a href="#services" class="text-lg font-medium header-text-link hover:text-primary transition duration-300">Services</a>
+                        <a href="#testimonials" class="text-lg font-medium header-text-link hover:text-primary transition duration-300">Reviews</a>
+                        <!-- Call Us Now Button -->
+                        <a href="tel:+917095886688" class="text-lg font-medium text-white bg-primary hover:bg-blue-700 py-2 px-4 rounded-full shadow-md transition duration-300 flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-10a2 2 0 01-2-2v-2.72a1 1 0 011-1z"></path></svg>
+                            Call Us Now
+                        </a>
+                        <a href="#contact" class="text-lg font-medium text-gray-900 bg-accent hover:bg-amber-500 py-2 px-4 rounded-full shadow-md transition duration-300">Book Inspection</a>
+                    </nav>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-button" class="md:hidden p-2 rounded-full header-text-link focus:outline-none focus:ring-2 focus:ring-primary">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
-                    <div id="loading-spinner" class="hidden text-center mt-4">
-                        <div class="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-primary rounded-full" role="status"></div>
-                        <span class="ml-2 text-primary">Submitting data...</span>
+                </div>
+            </div>
+            <!-- Mobile Menu (Hidden by default) -->
+            <div id="mobile-menu" class="hidden md:hidden card-bg border-t border-gray-200">
+                <nav class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium header-text-link hover:bg-gray-100">Home</a>
+                    <a href="#services" class="block px-3 py-2 rounded-md text-base font-medium header-text-link hover:bg-gray-100">Services</a>
+                    <a href="#testimonials" class="block px-3 py-2 rounded-md text-base font-medium header-text-link hover:bg-gray-100">Reviews</a>
+                    <!-- Call Us Now link in mobile menu -->
+                    <a href="tel:+917095886688" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 text-primary font-semibold">
+                        Call Us Now (+91 70958 86688)
+                    </a>
+                    <a href="#contact" class="block w-full text-center mt-4 text-base font-medium text-white bg-primary py-2 rounded-lg hover:bg-blue-700">Book Inspection</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="home" class="py-20 md:py-32">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="max-w-4xl mx-auto">
+                    <h1 class="text-5xl md:text-6xl font-extrabold heading-text leading-tight mb-4">
+                        Secure Your Dream Home in <span class="text-secondary">Visakhapatnam</span>
+                    </h1>
+                    <p class="text-xl text-white opacity-80 mb-8">
+                        AP31 Home Inspections provides detailed, unbiased, and professional property assessments across Vizag. Know your investment before you commit.
+                    </p>
+                    <a href="#contact" class="inline-block bg-accent text-gray-900 text-xl font-semibold py-4 px-10 rounded-xl shadow-xl hover:bg-amber-500 transition duration-300 transform hover:scale-105">
+                        Schedule Your Inspection Today
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inspection Info Carousel -->
+        <section id="about-inspection" class="py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-center heading-text mb-8">The Value of Inspection</h2>
+                
+                <div class="relative w-full overflow-hidden rounded-2xl shadow-2xl h-[500px] md:h-[450px]">
+                    <!-- Slides Container -->
+                    <div id="carousel-slides" class="flex transition-transform duration-700 ease-in-out h-full">
+                        
+                        <!-- Slide 1: Why Inspection Important -->
+                        <div class="min-w-full h-full flex flex-col md:flex-row card-bg">
+                            <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-primary text-white rounded-l-2xl">
+                                <h3 class="text-3xl font-bold mb-4">Why Is Inspection Important?</h3>
+                                <p class="text-lg opacity-95 leading-relaxed">
+                                    A home is likely the biggest purchase of your life. While a property might look fresh painted, hidden defects in structure, electrical wiring, or dampness can cost lakhs in future repairs.
+                                    <br><br>
+                                    An inspection uncovers the "invisible" truth, protecting your investment and safety.
+                                </p>
+                            </div>
+                            <div class="md:w-1/2 h-full bg-gray-200 relative rounded-r-2xl">
+                                <img src="https://placehold.co/800x600/1D4ED8/FFFFFF?text=Hidden+Defects+%26+Safety" class="object-cover w-full h-full rounded-r-2xl" alt="Inspector checking for defects">
+                            </div>
+                        </div>
+
+                        <!-- Slide 2: What We Inspect -->
+                        <div class="min-w-full h-full flex flex-col md:flex-row card-bg">
+                            <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-secondary text-white rounded-l-2xl">
+                                <h3 class="text-3xl font-bold mb-4">What Do We Inspect?</h3>
+                                <p class="text-lg opacity-95 mb-4">We perform a rigorous 100+ point check covering:</p>
+                                <ul class="list-disc list-inside text-lg space-y-2 font-medium">
+                                    <li>Structural Integrity (Walls, Beams, Columns)</li>
+                                    <li>Electrical Safety & Grounding</li>
+                                    <li>Plumbing, Leakage & Seepage Detection</li>
+                                    <li>Moisture Analysis & Dampness</li>
+                                    <li>Doors, Windows & Finishing Quality</li>
+                                </ul>
+                            </div>
+                            <div class="md:w-1/2 h-full bg-gray-200 relative rounded-r-2xl">
+                                <img src="https://placehold.co/800x600/06B6D4/FFFFFF?text=100%2B+Point+Checklist" class="object-cover w-full h-full rounded-r-2xl" alt="Checklist concept">
+                            </div>
+                        </div>
+
+                        <!-- Slide 3: How It Helps Clients -->
+                        <div class="min-w-full h-full flex flex-col md:flex-row card-bg">
+                            <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center bg-accent text-gray-900 rounded-l-2xl">
+                                <h3 class="text-3xl font-bold mb-4">How It Helps You?</h3>
+                                <p class="text-lg mb-4">Our report is your leverage. It empowers you to:</p>
+                                <ul class="list-disc list-inside text-lg space-y-3 font-semibold">
+                                    <li>Negotiate a fairer property price.</li>
+                                    <li>Request specific repairs before closing the deal.</li>
+                                    <li>Avoid unexpected heavy expenses after moving in.</li>
+                                    <li>Move in with absolute peace of mind.</li>
+                                </ul>
+                            </div>
+                            <div class="md:w-1/2 h-full bg-gray-200 relative rounded-r-2xl">
+                                <img src="https://placehold.co/800x600/FBBF24/000000?text=Power+to+Negotiate" class="object-cover w-full h-full rounded-r-2xl" alt="Handshake negotiation">
+                            </div>
+                        </div>
+
                     </div>
-                </form>
-                <div id="confirmation-message" class="mt-6 hidden p-4 rounded-lg bg-green-100 text-green-700 border border-green-300">
-                    <p class="font-semibold">Success!</p>
-                    <p>Your request has been submitted. AP31 Home Inspections will contact you shortly.</p>
-                </div>
-                <div id="error-message" class="mt-6 hidden p-4 rounded-lg bg-red-100 text-red-700 border border-red-300">
-                    <p class="font-semibold">Submission Error</p>
-                    <p id="error-text"></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="text-white py-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <!-- Footer Logo: Changed to full AP31 Home Inspections -->
-            <h3 class="text-2xl font-extrabold text-secondary mb-4">AP31 Home Inspections</h3>
-            
-            <!-- Navigation Links -->
-            <div class="flex justify-center space-x-6 text-sm mb-6">
-                <a href="#home" class="hover:text-secondary transition duration-300">Home</a>
-                <a href="#services" class="hover:text-secondary transition duration-300">Services</a>
-                <a href="#contact" class="hover:text-secondary transition duration-300">Schedule Now</a>
-            </div>
-
-            <!-- Contact Details at Bottom - Simplified (WhatsApp & Instagram only) -->
-            <div class="mt-8 pt-6 border-t border-gray-700">
-                <div class="flex justify-center space-x-12 text-lg font-medium">
-                    <!-- WhatsApp Link -->
-                    <a href="https://wa.me/917095886688" target="_blank" class="whatsapp-link block transition duration-300">
-                        WhatsApp
-                    </a>
-                    <!-- Instagram Link -->
-                    <a href="https://www.instagram.com/ap31_homeinspections" target="_blank" class="instagram-link block transition duration-300">
-                        Instagram
-                    </a>
+                    
+                    <!-- Carousel Indicators -->
+                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3 z-10">
+                        <button class="carousel-indicator w-3 h-3 rounded-full bg-gray-300 transition duration-300" onclick="goToSlide(0)"></button>
+                        <button class="carousel-indicator w-3 h-3 rounded-full bg-gray-300 transition duration-300" onclick="goToSlide(1)"></button>
+                        <button class="carousel-indicator w-3 h-3 rounded-full bg-gray-300 transition duration-300" onclick="goToSlide(2)"></button>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <p class="text-gray-400 text-sm mt-8 mb-2">© 2024 AP31 Home Inspections. All rights reserved.</p>
-            <p id="full-user-id-display" class="text-xs text-gray-500 break-all">User ID Loading...</p>
-        </div>
-    </footer>
+        <!-- Services Section -->
+        <section id="services" class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center heading-text mb-12">Our Inspection Services</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-    <!-- JavaScript for Firebase, Mobile Menu, Carousel, and Dynamic Theme -->
+                    <!-- Service Card 1 -->
+                    <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-300 border-t-4 border-primary">
+                        <svg class="w-10 h-10 text-primary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        <h3 class="text-xl font-semibold mb-3">Pre-Purchase Residential</h3>
+                        <p class="opacity-80">Comprehensive inspection of all major systems (electrical, plumbing, HVAC, structure) for houses and villas.</p>
+                    </div>
+                    <!-- Service Card 2 -->
+                    <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-300 border-t-4 border-secondary">
+                        <svg class="w-10 h-10 text-secondary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2zm2.5-4.5h7.001"></path></svg>
+                        <h3 class="text-xl font-semibold mb-3">Apartment/Flat Inspection</h3>
+                        <p class="opacity-80">Detailed checking of interior finishes, moisture, and common area interfaces for high-rise flats in Vizag.</p>
+                    </div>
+                    <!-- Service Card 3 -->
+                    <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-300 border-t-4 border-accent">
+                        <svg class="w-10 h-10 text-accent mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.24l-3.323-3.322c-.624-.624-1.636-.624-2.26 0L10 9.879 7.464 7.343c-.625-.625-1.636-.625-2.26 0L1.5 12.086 4.717 15.303c.624.624 1.636.624 2.26 0L10 12.879l2.536 2.536c.625.625 1.636.625 2.26 0l3.323-3.323c.624-.624.624-1.636 0-2.26z"></path></svg>
+                        <h3 class="text-xl font-semibold mb-3">New Construction</h3>
+                        <p class="opacity-80">Phase inspections during construction or a final walkthrough for newly built homes.</p>
+                    </div>
+                    <!-- Service Card 4 -->
+                    <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-300 border-t-4 border-primary">
+                        <svg class="w-10 h-10 text-primary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                        <h3 class="text-xl font-semibold mb-3">Commercial Property</h3>
+                        <p class="opacity-80">Inspections for small-to-mid size commercial spaces, offices, and retail units.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us Section -->
+        <section id="whyus" class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center heading-text mb-12">Why AP31 is Vizag's First Choice</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center text-white">
+                    <!-- Features List -->
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <svg class="flex-shrink-0 w-8 h-8 text-accent mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            <div>
+                                <h4 class="text-xl font-semibold">Local Expertise (AP31)</h4>
+                                <p class="text-gray-200">Our inspectors understand the unique construction methods, climate challenges, and common issues specific to properties in Visakhapatnam.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <svg class="flex-shrink-0 w-8 h-8 text-accent mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 6h12a1 1 0 110 2H4a1 1 0 010-2zm0 4h12a1 1 0 010 2H4a1 1 0 010-2zm0 4h12a1 1 0 010 2H4a1 1 0 010-2z"></path></svg>
+                            <div>
+                                <h4 class="text-xl font-semibold">Detailed Digital Reports</h4>
+                                <p class="text-gray-200">Receive a clear, easy-to-read digital report with photos and summary notes within 24 hours.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <svg class="flex-shrink-0 w-8 h-8 text-accent mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.894.553L7.382 10l-1.382-2.453a1 1 0 10-1.789 1l2.5 4a1 1 0 001.789 0l2.5-4A1 1 0 0010 7z" clip-rule="evenodd"></path></svg>
+                            <div>
+                                <h4 class="text-xl font-semibold">Unbiased & Transparent</h4>
+                                <p class="text-gray-200">We work only for you, the client. Our reports are completely objective.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Placeholder Image -->
+                    <div class="hidden lg:block">
+                        <img src="https://placehold.co/600x400/06B6D4/FFFFFF?text=Vizag+Home+Safety" onerror="this.onerror=null; this.src='https://placehold.co/600x400/06B6D4/FFFFFF?text=Vizag+Home+Safety';" alt="Illustration of a house being inspected" class="rounded-xl shadow-2xl w-full h-auto object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center heading-text mb-12">Hear From Our Happy Clients</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="card-bg p-6 rounded-xl border border-gray-200 shadow-lg">
+                        <div class="text-accent text-3xl font-serif mb-4">"</div>
+                        <p class="italic text-lg text-gray-700 mb-4">"The inspection saved us from a major plumbing issue in the flat we were about to buy in Madhurawada. Highly recommend AP31!"</p>
+                        <p class="font-semibold text-primary">Suresh V.</p>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="card-bg p-6 rounded-xl border border-gray-200 shadow-lg">
+                        <div class="text-accent text-3xl font-serif mb-4">"</div>
+                        <p class="italic text-lg text-gray-700 mb-4">"We used them for a new villa construction check. Their thermal imaging caught a heat bridge we never would have noticed."</p>
+                        <p class="font-semibold text-primary">Varma C.</p>
+                    </div>
+                    <!-- Testimonial 3 -->
+                    <div class="card-bg p-6 rounded-xl border border-gray-200 shadow-lg">
+                        <div class="text-accent text-3xl font-serif mb-4">"</div>
+                        <p class="italic text-lg text-gray-700 mb-4">"Detailed, punctual, and unbiased. The final commercial report allowed me to negotiate a better price for the office space."</p>
+                        <p class="font-semibold text-primary">Gautam R.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Banner Section -->
+        <section class="py-12 bg-secondary">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4">
+                    Ready to Secure Your Investment?
+                </h2>
+                <p class="text-xl text-white opacity-90 mb-6 max-w-3xl mx-auto">
+                    Don't leave your property purchase to chance. Get the expert assessment you need.
+                </p>
+                <a href="#contact" class="inline-block bg-accent text-gray-900 text-xl font-bold py-3 px-8 rounded-lg shadow-2xl hover:bg-amber-500 transition duration-300 transform hover:scale-105">
+                    Start Your Inspection Request
+                </a>
+            </div>
+        </section>
+
+        <!-- Contact Section (Form Only) - Fixed Dark Background for Readability -->
+        <section id="contact" class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-bold text-center text-white mb-4">Book Your Inspection</h2>
+                <p class="text-center text-lg text-gray-300 mb-12">Take the first step towards a secure purchase. Contact us today.</p>
+                
+                <!-- Centered Form -->
+                <div class="max-w-3xl mx-auto card-bg p-8 md:p-10 rounded-xl border border-gray-200">
+                    <form id="inspection-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
+                                <input type="text" id="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-300 mb-1">Phone Number</label>
+                                <input type="tel" id="phone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary" pattern="[0-9]{10}" title="Ten digits phone number">
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
+                            <input type="email" id="email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                        </div>
+                        <div class="mb-6">
+                            <label for="property-type" class="block text-sm font-medium text-gray-300 mb-1">Type of Property</label>
+                            <select id="property-type" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary">
+                                <option value="" disabled selected>Select Inspection Type</option>
+                                <option value="Residential House/Villa">Residential House/Villa</option>
+                                <option value="Apartment/Flat">Apartment/Flat</option>
+                                <option value="New Construction">New Construction</option>
+                                <option value="Commercial Space">Commercial Space</option>
+                            </select>
+                        </div>
+                        <div class="mb-6">
+                            <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Inspection Location / Details</label>
+                            <textarea id="message" rows="4" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary" placeholder="E.g., 3-BHK Flat in Madhurawada"></textarea>
+                        </div>
+                        <button type="submit" id="submit-button" class="w-full bg-accent text-gray-900 text-lg font-bold py-3 rounded-lg hover:bg-amber-500 transition duration-300 transform hover:scale-[1.01] shadow-md">
+                            Submit Booking Request
+                        </button>
+                        <div id="loading-spinner" class="hidden text-center mt-4">
+                            <div class="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-primary rounded-full" role="status"></div>
+                            <span class="ml-2 text-primary">Submitting data...</span>
+                        </div>
+                    </form>
+                    <div id="confirmation-message" class="mt-6 hidden p-4 rounded-lg bg-green-100 text-green-700 border border-green-300">
+                        <p class="font-semibold">Success!</p>
+                        <p>Your request has been submitted. AP31 will contact you shortly.</p>
+                    </div>
+                    <div id="error-message" class="mt-6 hidden p-4 rounded-lg bg-red-100 text-red-700 border border-red-300">
+                        <p class="font-semibold">Submission Error</p>
+                        <p id="error-text"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-white py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h3 class="text-2xl font-extrabold text-secondary mb-4">AP31 Home Inspections</h3>
+                
+                <!-- Navigation Links -->
+                <div class="flex justify-center space-x-6 text-sm mb-6">
+                    <a href="#home" class="hover:text-secondary transition duration-300">Home</a>
+                    <a href="#services" class="hover:text-secondary transition duration-300">Services</a>
+                    <a href="#contact" class="hover:text-secondary transition duration-300">Schedule Now</a>
+                </div>
+
+                <!-- Contact Details at Bottom - Simplified (WhatsApp & Instagram only) -->
+                <div class="mt-8 pt-6 border-t border-gray-700">
+                    <div class="flex justify-center space-x-12 text-lg font-medium">
+                        <!-- WhatsApp Link -->
+                        <a href="https://wa.me/917095886688" target="_blank" class="whatsapp-link block transition duration-300">
+                            WhatsApp
+                        </a>
+                        <!-- Instagram Link -->
+                        <a href="https://www.instagram.com/ap31_homeinspections" target="_blank" class="instagram-link block transition duration-300">
+                            Instagram
+                        </a>
+                    </div>
+                </div>
+
+                <p class="text-gray-400 text-sm mt-8 mb-2">© 2024 AP31 Home Inspections. All rights reserved.</p>
+                <p id="full-user-id-display" class="text-xs text-gray-500 break-all">User ID Loading...</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript for Firebase, Mobile Menu, Carousel, and Dynamic Gradient -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -544,7 +536,7 @@
         mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
         document.querySelectorAll('#mobile-menu a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
 
-        // Carousel Logic (Attached to window for global access from onclick attributes)
+        // Carousel Logic
         let currentSlide = 0;
         const slidesContainer = document.getElementById('carousel-slides');
         const indicators = document.querySelectorAll('.carousel-indicator');
@@ -588,43 +580,38 @@
             slideInterval = setInterval(nextSlide, 5000);
         }
 
-        /* --- DYNAMIC SCROLL-BASED THEME LOGIC --- */
 
-        const root = document.documentElement;
+        /* --- DYNAMIC GRADIENT SCROLL LOGIC --- */
+        
+        // Define the color stops for the scroll animation
+        const COLOR_STOPS = [
+            '#1D4ED8', // Blue
+            '#8B5CF6', // Violet
+            '#EC4899', // Pink
+            '#06B6D4', // Teal
+        ];
+        
+        const mainWrapper = document.getElementById('main-wrapper');
 
-        // RGB endpoints (from CSS :root block)
-        const LIGHT = {
-            bg_main: [255, 255, 255], 
-            bg_card: [255, 255, 255], 
-            text_main: [55, 65, 81], 
-            text_heading: [17, 24, 39],
-            shadow_color: [0, 0, 0],
-        };
-        const DARK = {
-            bg_main: [17, 24, 39], 
-            bg_card: [39, 40, 48], 
-            text_main: [209, 213, 219], 
-            text_heading: [255, 255, 255],
-            shadow_color: [255, 255, 255],
-        };
-
-        // Interpolation function: lerp(start, end, progress)
-        function lerp(start, end, progress) {
-            return start + (end - start) * progress;
-        }
-
-        function interpolateColors(colorName, progress) {
-            const start = LIGHT[colorName];
-            const end = DARK[colorName];
-
-            const r = Math.round(lerp(start[0], end[0], progress));
-            const g = Math.round(lerp(start[1], end[1], progress));
-            const b = Math.round(lerp(start[2], end[2], progress));
-
+        // Utility function to convert hex to RGB
+        function hexToRgb(hex) {
+            const bigint = parseInt(hex.slice(1), 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
             return [r, g, b];
         }
 
-        function handleScrollTheme() {
+        // Utility function to mix two RGB colors based on a ratio (0 to 1)
+        function mixColor(rgb1, rgb2, ratio) {
+            const r = Math.round(rgb1[0] * (1 - ratio) + rgb2[0] * ratio);
+            const g = Math.round(rgb1[1] * (1 - ratio) + rgb2[1] * ratio);
+            const b = Math.round(rgb1[2] * (1 - ratio) + rgb2[2] * ratio);
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // Main function to handle scroll and update background
+        function handleScrollGradient() {
             // Get the total height of the content
             const documentHeight = document.documentElement.scrollHeight;
             // Get the height of the visible window
@@ -636,40 +623,50 @@
             const scrollableHeight = documentHeight - windowHeight;
 
             // Calculate current scroll progress as a ratio (0.0 to 1.0)
-            let scrollProgress = scrollableHeight > 0 ? scrollY / scrollableHeight : 0;
+            let scrollRatio = scrollableHeight > 0 ? scrollY / scrollableHeight : 0;
+            // Clamp the ratio between 0 and 1
+            scrollRatio = Math.max(0, Math.min(1, scrollRatio)); 
             
-            // Clamp the progress between 0 and 1
-            scrollProgress = Math.max(0, Math.min(1, scrollProgress));
+            const numStops = COLOR_STOPS.length;
+            const sectionSize = 1 / (numStops - 1); // Size of each interpolation section (e.g., 0.333 for 4 colors)
 
-            // --- Apply Interpolated Colors ---
+            // Determine which two colors we are between
+            const startIndex = Math.min(Math.floor(scrollRatio / sectionSize), numStops - 2);
+            const endIndex = startIndex + 1;
 
-            // Background Main (This is the "sides" color)
-            const [bg_r, bg_g, bg_b] = interpolateColors('bg_main', scrollProgress);
-            root.style.setProperty('--bg-main', `rgb(${bg_r}, ${bg_g}, ${bg_b})`);
+            // Calculate the progress within the current section (0 to 1)
+            const sectionProgress = (scrollRatio - startIndex * sectionSize) / sectionSize;
+
+            const color1Hex = COLOR_STOPS[startIndex];
+            const color2Hex = COLOR_STOPS[endIndex];
+
+            // Interpolate the colors
+            const rgb1 = hexToRgb(color1Hex);
+            const rgb2 = hexToRgb(color2Hex);
             
-            // Background Card (for header, cards, form)
-            const [card_r, card_g, card_b] = interpolateColors('bg_card', scrollProgress);
-            root.style.setProperty('--bg-card', `rgb(${card_r}, ${card_g}, ${card_b})`);
+            const blendedColor = mixColor(rgb1, rgb2, sectionProgress);
+            
+            // Generate a secondary color slightly above the blended color for the gradient effect
+            const secondaryRatio = Math.min(1, sectionProgress + 0.1); // Shift the second color slightly ahead
+            const secondaryStartIndex = Math.min(Math.floor(secondaryRatio / sectionSize), numStops - 2);
+            const secondaryEndIndex = secondaryStartIndex + 1;
+            const secondaryProgress = (secondaryRatio - secondaryStartIndex * sectionSize) / sectionSize;
+            
+            const secondaryRgb1 = hexToRgb(COLOR_STOPS[secondaryStartIndex]);
+            const secondaryRgb2 = hexToRgb(COLOR_STOPS[secondaryEndIndex]);
+            const blendedSecondaryColor = mixColor(secondaryRgb1, secondaryRgb2, secondaryProgress);
 
-            // Text Main
-            const [text_r, text_g, text_b] = interpolateColors('text_main', scrollProgress);
-            root.style.setProperty('--text-main', `rgb(${text_r}, ${text_g}, ${text_b})`);
-
-            // Text Heading
-            const [head_r, head_g, head_b] = interpolateColors('text_heading', scrollProgress);
-            root.style.setProperty('--text-heading', `rgb(${head_r}, ${head_g}, ${head_b})`);
-
-            // Shadow Color (for smooth shadow transition from black to white)
-            const [shadow_r, shadow_g, shadow_b] = interpolateColors('shadow_color', scrollProgress);
-            root.style.setProperty('--shadow-color-r', shadow_r);
-            root.style.setProperty('--shadow-color-g', shadow_g);
-            root.style.setProperty('--shadow-color-b', shadow_b);
+            // Apply the dynamic gradient to the main wrapper
+            mainWrapper.style.backgroundImage = `linear-gradient(180deg, ${blendedColor}, ${blendedSecondaryColor})`;
+            mainWrapper.style.backgroundAttachment = 'fixed'; // Keep gradient fixed behind scrolling content
         }
 
-        // Initialize and Add scroll listener
-        window.addEventListener('scroll', handleScrollTheme);
-        window.addEventListener('resize', handleScrollTheme); // Handle resize in case scrollable area changes
-        handleScrollTheme(); // Initial call to set colors to white
+        // Initialize and add scroll listener
+        window.onload = function() {
+            handleScrollGradient(); // Set initial color
+        }
+        window.addEventListener('scroll', handleScrollGradient);
+        window.addEventListener('resize', handleScrollGradient);
     </script>
 </body>
 </html>
