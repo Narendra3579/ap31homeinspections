@@ -12,11 +12,10 @@
             theme: {
                 extend: {
                     colors: {
-                        // Fixed brand colors (These do NOT change with scroll)
+                        // Fixed brand colors
                         'primary': '#1D4ED8', // Deep Blue
                         'secondary': '#06B6D4', // Cyan/Teal
                         'accent': '#FBBF24', // Amber for highlights
-                        // Added specific dark color for text/icons on primary background
                         'dark-text': '#1F2937' 
                     },
                     fontFamily: {
@@ -28,8 +27,14 @@
     </script>
     <!-- Use Inter font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- 
+        ===================================================================
+        INTERNAL CSS STYLES (Equivalent to a style.css file)
+        =================================================================== 
+    -->
     <style>
-        /* --- CSS Variables and Smooth Transitions --- */
+        /* --- CSS Variables and Smooth Transitions for Scroll-Based Theme --- */
         :root {
             /* Fixed brand colors (RGB for easy use with utility classes) */
             --primary-rgb: 29, 77, 216; 
@@ -37,21 +42,20 @@
             --accent-rgb: 251, 191, 36; 
 
             /* --- LIGHT THEME DEFINITIONS (RGB) --- */
-            --light-bg-main-r: 243; --light-bg-main-g: 244; --light-bg-main-b: 246; /* gray-100 */
-            --light-bg-card-r: 255; --light-bg-card-g: 255; --light-bg-card-b: 255; /* white */
-            --light-text-main-r: 39; --light-text-main-g: 39; --light-text-main-b: 42; /* gray-800 */
-            --light-text-heading-r: 17; --light-text-heading-g: 24; --light-text-heading-b: 39; /* gray-900 */
+            --light-bg-main-r: 243; --light-bg-main-g: 244; --light-bg-main-b: 246; 
+            --light-bg-card-r: 255; --light-bg-card-g: 255; --light-bg-card-b: 255; 
+            --light-text-main-r: 39; --light-text-main-g: 39; --light-text-main-b: 42; 
+            --light-text-heading-r: 17; --light-text-heading-g: 24; --light-text-heading-b: 39; 
             --shadow-light: rgba(0, 0, 0, 0.1);
 
             /* --- DARK THEME DEFINITIONS (RGB) --- */
-            --dark-bg-main-r: 17; --dark-bg-main-g: 24; --dark-bg-main-b: 39; /* gray-900 */
-            --dark-bg-card-r: 31; --dark-bg-card-g: 41; --dark-bg-card-b: 55; /* gray-800 */
-            --dark-text-main-r: 209; --dark-text-main-g: 213; --dark-text-main-b: 219; /* gray-300 */
-            --dark-text-heading-r: 255; --dark-text-heading-g: 255; --dark-text-heading-b: 255; /* white */
+            --dark-bg-main-r: 17; --dark-bg-main-g: 24; --dark-bg-main-b: 39; 
+            --dark-bg-card-r: 31; --dark-bg-card-g: 41; --dark-bg-card-b: 55; 
+            --dark-text-main-r: 209; --dark-text-main-g: 213; --dark-text-main-b: 219; 
+            --dark-text-heading-r: 255; --dark-text-heading-g: 255; --dark-text-heading-b: 255; 
             --shadow-dark: rgba(255, 255, 255, 0.05);
 
             /* --- CURRENT APPLIED COLORS (DEFAULT TO LIGHT) --- */
-            /* These variables are dynamically set by JavaScript for the scroll effect */
             --bg-main: var(--light-bg-main-r), var(--light-bg-main-g), var(--light-bg-main-b);
             --bg-card: var(--light-bg-card-r), var(--light-bg-card-g), var(--light-bg-card-b);
             --text-main: var(--light-text-main-r), var(--light-text-main-g), var(--light-text-main-b);
@@ -59,7 +63,7 @@
             --shadow-current: var(--shadow-light);
 
             /* Footer color remains fixed (dark blue) for high contrast */
-            --bg-footer: 17, 24, 39; /* gray-900 */ 
+            --bg-footer: 17, 24, 39; 
             
             /* Global transition for smoothness on scroll */
             transition: 
@@ -79,7 +83,7 @@
             font-family: 'Inter', sans-serif;
             background-color: rgb(var(--bg-main));
             color: rgb(var(--text-main));
-            transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out; /* Fallback/body transition */
+            transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out;
         }
 
         /* Header (Uses card background) */
@@ -108,7 +112,7 @@
             background-color: rgb(var(--bg-footer));
         }
         
-        /* --- Carousel Styles (No change) --- */
+        /* --- Carousel Styles --- */
         .slider-container {
             position: relative;
             overflow: hidden;
@@ -160,6 +164,12 @@
 </head>
 <body class="font-sans">
 
+    <!-- 
+        ===================================================================
+        HTML STRUCTURE & CONTENT
+        =================================================================== 
+    -->
+
     <!-- Navigation Header -->
     <header class="sticky top-0 z-50 transition-colors duration-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -176,9 +186,6 @@
                     <a href="#services" class="text-lg font-medium text-gray-600 hover:text-primary transition duration-300">Services</a>
                     <a href="#whyus" class="text-lg font-medium text-gray-600 hover:text-primary transition duration-300">Why Us</a>
                     <a href="#contact" class="text-lg font-medium text-gray-900 bg-accent hover:bg-amber-500 py-2 px-4 rounded-full shadow-md transition duration-300">Book Inspection</a>
-                    
-                    <!-- Theme Toggle Button - Still hidden as theme is scroll-controlled -->
-                    <button id="theme-toggle" aria-label="Toggle Dark Mode" class="p-2 rounded-full hidden"></button>
                 </nav>
 
                 <!-- Mobile Menu Button -->
@@ -218,7 +225,7 @@
         </div>
     </section>
 
-    <!-- Featured Services Carousel Section -->
+    <!-- Featured Services Carousel Section (Highlights) -->
     <section id="featured-services" class="py-12 md:py-16 bg-white transition duration-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center heading-text mb-8">Inspection Highlights</h2>
@@ -484,7 +491,11 @@
         </div>
     </footer>
 
-    <!-- JavaScript for Firebase, Mobile Menu, Carousel, and Theme Change -->
+    <!-- 
+        ===================================================================
+        INTERNAL JAVASCRIPT LOGIC (Equivalent to a script.js file)
+        =================================================================== 
+    -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -646,7 +657,7 @@
         });
 
 
-        // --- Carousel Logic (No change) ---
+        // --- Carousel Logic ---
         let slideIndex = 1;
         let slideTimer;
         const SLIDE_INTERVAL = 5000; // 5 seconds
@@ -708,7 +719,7 @@
         }
 
 
-        // --- Scroll-based Theme Change Logic (New) ---
+        // --- Scroll-based Theme Change Logic ---
         const root = document.documentElement;
         let isDarkTheme = false;
 
