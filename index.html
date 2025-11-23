@@ -27,16 +27,30 @@
     <!-- Use Inter font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <style>
-        /* CSS Variables for Static Light Theme */
+        /* BASE VARIABLES AND THEME DEFINITIONS */
         :root {
+            /* Primary Brand Colors remain fixed */
+            --primary-color: #1D4ED8;
+            --secondary-color: #06B6D4;
+            --accent-color: #FBBF24;
+
             /* Light Theme Endpoints (RGB values) */
             --light-bg-main-r: 243; --light-bg-main-g: 244; --light-bg-main-b: 246; /* gray-100 */
             --light-bg-card-r: 255; --light-bg-card-g: 255; --light-bg-card-b: 255; /* white */
             --light-text-main-r: 39; --light-text-main-g: 39; --light-text-main-b: 42; /* gray-800 */
             --light-text-heading-r: 17; --light-text-heading-g: 24; --light-text-heading-b: 39; /* gray-900 */
-            --light-bg-footer-r: 17; --light-bg-footer-g: 24; --light-bg-footer-b: 39; /* gray-900 */
+            --light-bg-footer-r: 17; --light-bg-footer-g: 24; --light-bg-footer-b: 39; /* primary dark */
             --shadow-light: rgba(0, 0, 0, 0.1);
-            /* Current Applied Colors (Fixed to Light Theme) */
+
+            /* Dark Theme Endpoints (RGB values) */
+            --dark-bg-main-r: 24; --dark-bg-main-g: 25; --dark-bg-main-b: 30; /* Near black */
+            --dark-bg-card-r: 39; --dark-bg-card-g: 40; --dark-bg-card-b: 48; /* Dark Slate */
+            --dark-text-main-r: 209; --dark-text-main-g: 213; --dark-text-main-b: 219; /* gray-300 */
+            --dark-text-heading-r: 255; --dark-text-heading-g: 255; --dark-text-heading-b: 255; /* white */
+            --dark-bg-footer-r: 17; --dark-bg-footer-g: 24; --dark-bg-footer-b: 39; /* primary dark */
+            --shadow-dark: rgba(255, 255, 255, 0.05);
+
+            /* Default to Light Theme Variables */
             --bg-main: rgb(var(--light-bg-main-r), var(--light-bg-main-g), var(--light-bg-main-b));
             --bg-card: rgb(var(--light-bg-card-r), var(--light-bg-card-g), var(--light-bg-card-b));
             --text-main: rgb(var(--light-text-main-r), var(--light-text-main-g), var(--light-text-main-b));
@@ -44,39 +58,72 @@
             --bg-footer: rgb(var(--light-bg-footer-r), var(--light-bg-footer-g), var(--light-bg-footer-b));
             --shadow-current: var(--shadow-light);
         }
-        /* Base styles using CSS variables */
+
+        /* DARK MODE OVERRIDE */
+        .dark-mode {
+            --bg-main: rgb(var(--dark-bg-main-r), var(--dark-bg-main-g), var(--dark-bg-main-b));
+            --bg-card: rgb(var(--dark-bg-card-r), var(--dark-bg-card-g), var(--dark-bg-card-b));
+            --text-main: rgb(var(--dark-text-main-r), var(--dark-text-main-g), var(--dark-text-main-b));
+            --text-heading: rgb(var(--dark-text-heading-r), var(--dark-text-heading-g), var(--dark-text-heading-b));
+            --shadow-current: var(--shadow-dark);
+        }
+
+        /* TRANSITION STYLES */
         html {
             scroll-behavior: smooth;
         }
         body {
+            /* Apply smooth transition for color changes */
+            transition: background-color 0.8s ease, color 0.8s ease;
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-main);
             color: var(--text-main);
         }
-        /* Header (fixed to card background) */
+
+        /* Elements using dynamic colors */
         header {
             background-color: var(--bg-card);
             box-shadow: 0 10px 15px -3px var(--shadow-current);
+            transition: background-color 0.8s ease, box-shadow 0.8s ease;
         }
-        /* Card and input background styles */
         .card-bg {
             background-color: var(--bg-card);
             color: var(--text-main);
             box-shadow: 0 10px 15px -3px var(--shadow-current);
-            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+            /* Ensure smooth transition for cards */
+            transition: background-color 0.8s ease, color 0.8s ease, box-shadow 0.8s ease;
         }
-        /* Text colors */
         .heading-text {
             color: var(--text-heading);
-            transition: color 0.3s;
+            transition: color 0.8s ease;
         }
-        /* Footer color */
+        
+        /* Overrides for hardcoded Tailwind classes (e.g., bg-white, text-gray-700) */
+        .dark-mode .bg-white {
+             background-color: var(--bg-card) !important; 
+             color: var(--text-main) !important;
+        }
+        .dark-mode .bg-gray-50 {
+             background-color: var(--bg-main) !important;
+        }
+        .dark-mode .text-gray-600, 
+        .dark-mode .text-gray-700 {
+            color: var(--text-main) !important;
+        }
+        .dark-mode .text-gray-900 {
+            color: var(--text-heading) !important;
+        }
+        .dark-mode .border-gray-200,
+        .dark-mode .border-gray-300 {
+             border-color: rgba(var(--dark-text-main-r), var(--dark-text-main-g), var(--dark-text-main-b), 0.1) !important;
+        }
+
+        /* Fixed elements */
         footer {
-            background-color: var(--bg-footer);
+            background-color: var(--bg-footer); /* Fixed dark blue color */
         }
-        /* Carousel Styles */
         .carousel-indicator.active {
-            background-color: #1D4ED8; /* Primary Blue */
+            background-color: var(--primary-color);
             opacity: 1;
         }
     </style>
@@ -93,7 +140,6 @@
                 <!-- Desktop Nav Links -->
                 <nav class="hidden md:flex space-x-6 items-center">
                     <a href="#home" class="text-lg font-medium text-gray-600 hover:text-primary transition duration-300">Home</a>
-                    <!-- Removed: Importance Link -->
                     <a href="#services" class="text-lg font-medium text-gray-600 hover:text-primary transition duration-300">Services</a>
                     <a href="#testimonials" class="text-lg font-medium text-gray-600 hover:text-primary transition duration-300">Reviews</a>
                     <!-- NEW: Call Us Now Button -->
@@ -113,7 +159,6 @@
         <div id="mobile-menu" class="hidden md:hidden card-bg border-t border-gray-200">
             <nav class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">Home</a>
-                <!-- Removed: Importance Link -->
                 <a href="#services" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">Services</a>
                 <a href="#testimonials" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">Reviews</a>
                 <!-- NEW: Call Us Now link in mobile menu -->
@@ -142,7 +187,7 @@
         </div>
     </section>
 
-    <!-- NEW SECTION: Inspection Info Carousel (Still present as content section) -->
+    <!-- NEW SECTION: Inspection Info Carousel -->
     <section id="about-inspection" class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-center heading-text mb-8">The Value of Inspection</h2>
@@ -536,6 +581,39 @@
             clearInterval(slideInterval);
             slideInterval = setInterval(nextSlide, 5000);
         }
+
+        // SCROLL-BASED DARK MODE LOGIC
+        const body = document.body;
+        let isDarkMode = false;
+        const scrollThreshold = 0.8; // 80%
+
+        function handleScrollTheme() {
+            // Get the total height of the content
+            const documentHeight = document.documentElement.scrollHeight;
+            // Get the height of the visible window
+            const windowHeight = window.innerHeight;
+            // Get the current vertical scroll position
+            const scrollY = window.scrollY;
+
+            // Calculate the total scrollable area
+            const scrollableHeight = documentHeight - windowHeight;
+
+            // Calculate current scroll progress as a ratio (0.0 to 1.0)
+            const scrollRatio = scrollY / scrollableHeight;
+
+            if (scrollRatio >= scrollThreshold && !isDarkMode) {
+                // User is past 80% and in light mode -> switch to dark
+                body.classList.add('dark-mode');
+                isDarkMode = true;
+            } else if (scrollRatio < scrollThreshold && isDarkMode) {
+                // User is above 80% and in dark mode -> switch to light
+                body.classList.remove('dark-mode');
+                isDarkMode = false;
+            }
+        }
+
+        // Add scroll listener
+        window.addEventListener('scroll', handleScrollTheme);
     </script>
 </body>
 </html>
