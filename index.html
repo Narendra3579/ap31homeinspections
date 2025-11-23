@@ -1,0 +1,785 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP31 Home Inspections - Your Trusted Partner in Visakhapatnam</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind and Font -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Fixed brand colors (These do NOT change with scroll)
+                        'primary': '#1D4ED8', // Deep Blue
+                        'secondary': '#06B6D4', // Cyan/Teal
+                        'accent': '#FBBF24', // Amber for highlights
+                        // Added specific dark color for text/icons on primary background
+                        'dark-text': '#1F2937' 
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Use Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS Variables and Smooth Transitions --- */
+        :root {
+            /* Fixed brand colors (RGB for easy use with utility classes) */
+            --primary-rgb: 29, 77, 216; 
+            --secondary-rgb: 6, 182, 212; 
+            --accent-rgb: 251, 191, 36; 
+
+            /* --- LIGHT THEME DEFINITIONS (RGB) --- */
+            --light-bg-main-r: 243; --light-bg-main-g: 244; --light-bg-main-b: 246; /* gray-100 */
+            --light-bg-card-r: 255; --light-bg-card-g: 255; --light-bg-card-b: 255; /* white */
+            --light-text-main-r: 39; --light-text-main-g: 39; --light-text-main-b: 42; /* gray-800 */
+            --light-text-heading-r: 17; --light-text-heading-g: 24; --light-text-heading-b: 39; /* gray-900 */
+            --shadow-light: rgba(0, 0, 0, 0.1);
+
+            /* --- DARK THEME DEFINITIONS (RGB) --- */
+            --dark-bg-main-r: 17; --dark-bg-main-g: 24; --dark-bg-main-b: 39; /* gray-900 */
+            --dark-bg-card-r: 31; --dark-bg-card-g: 41; --dark-bg-card-b: 55; /* gray-800 */
+            --dark-text-main-r: 209; --dark-text-main-g: 213; --dark-text-main-b: 219; /* gray-300 */
+            --dark-text-heading-r: 255; --dark-text-heading-g: 255; --dark-text-heading-b: 255; /* white */
+            --shadow-dark: rgba(255, 255, 255, 0.05);
+
+            /* --- CURRENT APPLIED COLORS (DEFAULT TO LIGHT) --- */
+            /* These variables are dynamically set by JavaScript for the scroll effect */
+            --bg-main: var(--light-bg-main-r), var(--light-bg-main-g), var(--light-bg-main-b);
+            --bg-card: var(--light-bg-card-r), var(--light-bg-card-g), var(--light-bg-card-b);
+            --text-main: var(--light-text-main-r), var(--light-text-main-g), var(--light-text-main-b);
+            --text-heading: var(--light-text-heading-r), var(--light-text-heading-g), var(--light-text-heading-b);
+            --shadow-current: var(--shadow-light);
+
+            /* Footer color remains fixed (dark blue) for high contrast */
+            --bg-footer: 17, 24, 39; /* gray-900 */ 
+            
+            /* Global transition for smoothness on scroll */
+            transition: 
+                --bg-main 0.7s ease-in-out,
+                --bg-card 0.7s ease-in-out,
+                --text-main 0.7s ease-in-out,
+                --text-heading 0.7s ease-in-out,
+                --shadow-current 0.7s ease-in-out;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Base styles using CSS variables (using rgb() for dynamic transitions) */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: rgb(var(--bg-main));
+            color: rgb(var(--text-main));
+            transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out; /* Fallback/body transition */
+        }
+
+        /* Header (Uses card background) */
+        header {
+            background-color: rgb(var(--bg-card));
+            box-shadow: 0 10px 15px -3px var(--shadow-current);
+            transition: background-color 0.7s ease-in-out, box-shadow 0.7s ease-in-out;
+        }
+
+        /* Card and input background styles */
+        .card-bg {
+            background-color: rgb(var(--bg-card));
+            color: rgb(var(--text-main));
+            box-shadow: 0 10px 15px -3px var(--shadow-current);
+            transition: background-color 0.7s ease-in-out, color 0.7s ease-in-out, box-shadow 0.7s ease-in-out;
+        }
+
+        /* Text colors for headings */
+        .heading-text {
+            color: rgb(var(--text-heading));
+            transition: color 0.7s ease-in-out;
+        }
+
+        /* Footer color remains dark-themed */
+        footer {
+            background-color: rgb(var(--bg-footer));
+        }
+        
+        /* --- Carousel Styles (No change) --- */
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            height: 400px; /* Fixed height for the slider area */
+        }
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: fadeIn 0.8s ease-in-out;
+            border-radius: 0.75rem;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+        .slider-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            font-size: 20px;
+            padding: 12px;
+            cursor: pointer;
+            transition: 0.6s ease;
+            user-select: none;
+        }
+        .prev-btn { left: 0; border-radius: 0 3px 3px 0; }
+        .next-btn { right: 0; border-radius: 3px 0 0 3px; }
+        
+        .dot {
+            cursor: pointer;
+            height: 12px;
+            width: 12px;
+            margin: 0 4px;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.6s ease;
+        }
+        .active-dot {
+            background-color: var(--accent);
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body class="font-sans">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 transition-colors duration-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#" class="text-3xl font-extrabold text-primary tracking-tight">
+                    AP31 <span class="text-secondary text-2xl font-semibold">Home Inspections</span>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <nav class="hidden md:flex space-x-6 items-center">
+                    <a href="#home" class="text-lg font-medium text-gray-600 hover:text-primary transition duration-300">Home</a>
+                    <a href="#featured-services" class="text-lg font-medium text-gray-600 hover:text-primary transition duration-300">Highlights</a>
+                    <a href="#services" class="text-lg font-medium text-gray-600 hover:text-primary transition duration-300">Services</a>
+                    <a href="#whyus" class="text-lg font-medium text-gray-600 hover:text-primary transition duration-300">Why Us</a>
+                    <a href="#contact" class="text-lg font-medium text-gray-900 bg-accent hover:bg-amber-500 py-2 px-4 rounded-full shadow-md transition duration-300">Book Inspection</a>
+                    
+                    <!-- Theme Toggle Button - Still hidden as theme is scroll-controlled -->
+                    <button id="theme-toggle" aria-label="Toggle Dark Mode" class="p-2 rounded-full hidden"></button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-full text-gray-600 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden card-bg border-t border-gray-200">
+            <nav class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">Home</a>
+                <a href="#featured-services" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">Highlights</a>
+                <a href="#services" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">Services</a>
+                <a href="#whyus" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100">Why Us</a>
+                <a href="#contact" class="block w-full text-center mt-4 text-base font-medium text-white bg-primary py-2 rounded-lg hover:bg-blue-700">Book Inspection</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="py-20 md:py-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-6xl font-extrabold heading-text leading-tight mb-4">
+                    Secure Your Dream Home in <span class="text-primary">Visakhapatnam</span>
+                </h1>
+                <p class="text-xl opacity-80 mb-8">
+                    AP31 Home Inspections provides detailed, unbiased, and professional property assessments across Vizag. Know your investment before you commit.
+                </p>
+                <a href="#contact" class="inline-block bg-primary text-white text-xl font-semibold py-4 px-10 rounded-xl shadow-xl hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+                    Schedule Your Inspection Today
+                </a>
+                <p class="mt-4 text-sm opacity-60">Serving all of Visakhapatnam (Vizag) and surrounding areas.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Services Carousel Section -->
+    <section id="featured-services" class="py-12 md:py-16 bg-white transition duration-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center heading-text mb-8">Inspection Highlights</h2>
+
+            <div class="slider-container card-bg shadow-xl">
+                <!-- Slide 1: Thermal Imaging -->
+                <div class="slide bg-primary flex flex-col md:flex-row items-center justify-around p-8 md:p-16 text-white text-center md:text-left">
+                    <div class="md:w-1/2">
+                        <h3 class="text-3xl md:text-4xl font-extrabold mb-3 text-accent">Thermal Imaging Scan</h3>
+                        <p class="text-xl opacity-90 mb-6">Uncover hidden issues like moisture intrusion, missing insulation, and electrical hotspots invisible to the naked eye. Essential for Vizag's climate.</p>
+                        <a href="#contact" class="inline-block bg-accent text-dark-text font-semibold py-2 px-6 rounded-full hover:bg-amber-500 transition duration-300">Book Thermal Audit</a>
+                    </div>
+                    <div class="mt-8 md:mt-0">
+                        <!-- Thermal Icon (Simplified SVG) -->
+                        <svg class="w-20 h-20 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 14v6m-2-4v4m-2-2v2m0-13h.01M16 19h1m-1 0a2 2 0 00-2-2H8a2 2 0 00-2 2h12zm-3-4h-2M9 16h6M8 8H5a2 2 0 00-2 2v6a2 2 0 002 2h14a2 2 0 002-2v-6a2 2 0 00-2-2h-3m-6-4l-2 2m2-2l2 2m-2-2h.01M12 4l-4 4m8 0l-4-4"></path></svg>
+                    </div>
+                </div>
+
+                <!-- Slide 2: Drone Roof Inspection -->
+                <div class="slide bg-secondary flex flex-col md:flex-row items-center justify-around p-8 md:p-16 text-dark-text text-center md:text-left">
+                    <div class="md:w-1/2">
+                        <h3 class="text-3xl md:text-4xl font-extrabold mb-3 text-primary">High-Resolution Drone Roof Inspection</h3>
+                        <p class="text-xl opacity-90 mb-6">Safe and non-invasive inspection of high-rise roofs and inaccessible areas. Crucial for detecting water pooling or weather damage caused by coastal winds.</p>
+                        <a href="#contact" class="inline-block bg-primary text-white font-semibold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300">Request Drone Survey</a>
+                    </div>
+                    <div class="mt-8 md:mt-0">
+                         <!-- Drone Icon (Simplified SVG) -->
+                        <svg class="w-20 h-20 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0zm-3 0a6 6 0 10-12 0 6 6 0 0012 0z"></path></svg>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Post-Renovation Audit -->
+                <div class="slide bg-gray-100 flex flex-col md:flex-row items-center justify-around p-8 md:p-16 text-dark-text text-center md:text-left">
+                    <div class="md:w-1/2">
+                        <h3 class="text-3xl md:text-4xl font-extrabold mb-3 text-primary">Post-Renovation Quality Audit</h3>
+                        <p class="text-xl opacity-90 mb-6">Ensure all renovation work meets safety and quality standards. We verify electrical, plumbing, and finishing work was executed correctly before final payment.</p>
+                        <a href="#contact" class="inline-block bg-secondary text-white font-semibold py-2 px-6 rounded-full hover:bg-teal-600 transition duration-300">Verify Work Quality</a>
+                    </div>
+                    <div class="mt-8 md:mt-0">
+                         <!-- Audit Icon (Simplified SVG) -->
+                        <svg class="w-20 h-20 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m-10 0h.01M16 19v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2m12-4h.01M6 12V6a2 2 0 012-2h8a2 2 0 012 2v6m-6-6v6"></path></svg>
+                    </div>
+                </div>
+
+                <!-- Previous Button -->
+                <a class="slider-nav prev-btn bg-gray-900/40 text-white hover:bg-gray-900/80 transition duration-300 shadow-lg" onclick="plusSlides(-1)">&#10094;</a>
+                <!-- Next Button -->
+                <a class="slider-nav next-btn bg-gray-900/40 text-white hover:bg-gray-900/80 transition duration-300 shadow-lg" onclick="plusSlides(1)">&#10095;</a>
+            </div>
+            
+            <!-- Dots/Pagination -->
+            <div class="text-center mt-6" id="dot-container">
+                <!-- Dots generated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 md:py-24 transition duration-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center heading-text mb-12">Our Inspection Services</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Service Card 1 -->
+                <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-700 border-t-4 border-primary">
+                    <svg class="w-10 h-10 text-primary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                    <h3 class="text-xl font-semibold mb-3 heading-text">Pre-Purchase Residential</h3>
+                    <p class="opacity-80">Comprehensive inspection of all major systems (electrical, plumbing, HVAC, structure) for houses and villas.</p>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-700 border-t-4 border-secondary">
+                    <svg class="w-10 h-10 text-secondary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M5 21h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2zm2.5-4.5h7.001"></path></svg>
+                    <h3 class="text-xl font-semibold mb-3 heading-text">Apartment/Flat Inspection</h3>
+                    <p class="opacity-80">Detailed checking of interior finishes, moisture, and common area interfaces for high-rise flats in Vizag.</p>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-700 border-t-4 border-accent">
+                    <svg class="w-10 h-10 text-accent mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2m0 0v1m-3-1v1m3-1v1m0-1v1m0-2v-1m-3 1v-1m3 1v-1m3 1v-1m-3 1v-1m0 0v-1m-3 1v-1m6 1v-1m-3 1v-1m0 0h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <h3 class="text-xl font-semibold mb-3 heading-text">New Construction Quality Check</h3>
+                    <p class="opacity-80">Phase inspections during construction or a final walkthrough for newly built homes.</p>
+                </div>
+
+                <!-- Service Card 4 -->
+                <div class="card-bg p-8 rounded-xl hover:shadow-2xl transition duration-700 border-t-4 border-primary">
+                    <svg class="w-10 h-10 text-primary mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                    <h3 class="text-xl font-semibold mb-3 heading-text">Commercial Property</h3>
+                    <p class="opacity-80">Inspections for small-to-mid size commercial spaces, offices, and retail units in the Vizag metropolitan area.</p>
+                </div>
+
+            </div>
+            <div class="text-center mt-12">
+                <a href="#contact" class="inline-block text-lg text-primary font-medium hover:text-blue-700 underline">View detailed inspection checklist</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section id="whyus" class="bg-primary text-white py-16 md:py-24 transition duration-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">Why AP31 is Vizag's First Choice</h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Features List -->
+                <div class="space-y-6">
+                    <!-- Feature 1 -->
+                    <div class="flex items-start space-x-4">
+                        <svg class="flex-shrink-0 w-8 h-8 text-accent mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        <div>
+                            <h4 class="text-xl font-semibold">Local Expertise (AP31)</h4>
+                            <p class="text-gray-200">Our inspectors understand the unique construction methods, climate challenges, and common issues specific to properties in Visakhapatnam, from Rushikonda to MVP Colony.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Feature 2 -->
+                    <div class="flex items-start space-x-4">
+                        <svg class="flex-shrink-0 w-8 h-8 text-accent mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 6h12a1 1 0 110 2H4a1 1 0 010-2zm0 4h12a1 1 0 010 2H4a1 1 0 010-2zm0 4h12a1 1 0 010 2H4a1 1 0 010-2z"></path></svg>
+                        <div>
+                            <h4 class="text-xl font-semibold">Detailed Digital Reports</h4>
+                            <p class="text-gray-200">Receive a clear, easy-to-read digital report, complete with high-resolution photos, thermal imaging data (if applicable), and summary notes within 24 hours.</p>
+                        </div>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="flex items-start space-x-4">
+                        <svg class="flex-shrink-0 w-8 h-8 text-accent mt-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.894.553L7.382 10l-1.382-2.453a1 1 0 10-1.789 1l2.5 4a1 1 0 001.789 0l2.5-4A1 1 0 0010 7z" clip-rule="evenodd"></path></svg>
+                        <div>
+                            <h4 class="text-xl font-semibold">Unbiased & Transparent</h4>
+                            <p class="text-gray-200">We work only for you, the client. Our reports are completely objective, ensuring you get the true picture of the property's condition.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Placeholder Image/Graphic -->
+                <div class="hidden lg:block">
+                    
+                    <img src="https://placehold.co/600x400/06B6D4/FFFFFF?text=Vizag+Home+Safety" onerror="this.onerror=null; this.src='https://placehold.co/600x400/06B6D4/FFFFFF?text=Vizag+Home+Safety';" alt="Illustration of a house being inspected" class="rounded-xl shadow-2xl w-full h-auto object-cover">
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 md:py-24 transition duration-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center heading-text mb-4">Book Your Inspection</h2>
+            <p class="text-center text-lg opacity-80 mb-12">Take the first step towards a secure purchase. Contact us today.</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                
+                <!-- Contact Form -->
+                <div class="lg:col-span-2 card-bg p-8 md:p-10 rounded-xl border border-gray-200">
+                    <form id="inspection-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium opacity-80 mb-1">Full Name</label>
+                                <input type="text" id="name" required class="w-full px-4 py-2 border border-gray-300 card-bg rounded-lg focus:ring-primary focus:border-primary">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium opacity-80 mb-1">Phone Number</label>
+                                <input type="tel" id="phone" required class="w-full px-4 py-2 border border-gray-300 card-bg rounded-lg focus:ring-primary focus:border-primary" pattern="[0-9]{10}" title="Ten digits phone number">
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="email" class="block text-sm font-medium opacity-80 mb-1">Email Address</label>
+                            <input type="email" id="email" required class="w-full px-4 py-2 border border-gray-300 card-bg rounded-lg focus:ring-primary focus:border-primary">
+                        </div>
+                        <div class="mb-6">
+                            <label for="property-type" class="block text-sm font-medium opacity-80 mb-1">Type of Property</label>
+                            <select id="property-type" required class="w-full px-4 py-2 border border-gray-300 card-bg rounded-lg focus:ring-primary focus:border-primary">
+                                <option value="" disabled selected>Select Inspection Type</option>
+                                <option value="Residential House/Villa">Residential House/Villa</option>
+                                <option value="Apartment/Flat">Apartment/Flat</option>
+                                <option value="New Construction">New Construction</option>
+                                <option value="Commercial Space">Commercial Space</option>
+                            </select>
+                        </div>
+                        <div class="mb-6">
+                            <label for="message" class="block text-sm font-medium opacity-80 mb-1">Inspection Location / Details</label>
+                            <textarea id="message" rows="4" required class="w-full px-4 py-2 border border-gray-300 card-bg rounded-lg focus:ring-primary focus:border-primary" placeholder="E.g., 3-BHK Flat in Madhurawada, or plot size in Rushikonda."></textarea>
+                        </div>
+                        <button type="submit" id="submit-button" class="w-full bg-accent text-gray-900 text-lg font-bold py-3 rounded-lg hover:bg-amber-500 transition duration-300 transform hover:scale-[1.01] shadow-md">
+                            Submit Booking Request
+                        </button>
+                        <div id="loading-spinner" class="hidden text-center mt-4">
+                            <div class="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-primary rounded-full" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                            <span class="ml-2 text-primary">Submitting data...</span>
+                        </div>
+                    </form>
+
+                    <!-- Confirmation Message Box -->
+                    <div id="confirmation-message" class="mt-6 hidden p-4 rounded-lg bg-green-100 text-green-700 border border-green-300" role="alert">
+                        <p class="font-semibold">Success!</p>
+                        <p>Your inspection request has been submitted and saved to our records. AP31 Home Inspections will contact you shortly to confirm the appointment.</p>
+                    </div>
+
+                    <!-- Error Message Box -->
+                    <div id="error-message" class="mt-6 hidden p-4 rounded-lg bg-red-100 text-red-700 border border-red-300" role="alert">
+                        <p class="font-semibold">Submission Error</p>
+                        <p id="error-text">There was an issue submitting your request. Please check the console for details.</p>
+                    </div>
+                </div>
+
+                <!-- Contact Info Box -->
+                <div class="bg-primary text-white p-8 md:p-10 rounded-xl shadow-lg flex flex-col justify-center">
+                    <h3 class="text-2xl font-bold mb-4">Our Details</h3>
+                    <div class="space-y-4 text-lg">
+                        
+                        <!-- Phone Number -->
+                        <p class="flex items-center">
+                            <svg class="w-6 h-6 mr-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-10a2 2 0 01-2-2v-2.72a1 1 0 011-1z"></path></svg>
+                            +91 70958 86688
+                        </p>
+
+                        <!-- WhatsApp Link (Updated for direct chat) -->
+                        <a href="https://wa.me/917095886688?text=Hello%2C%20I%20would%20like%20to%20schedule%20a%20home%20inspection." target="_blank" class="flex items-center hover:text-secondary transition duration-300">
+                            <svg class="w-6 h-6 mr-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                            Chat on WhatsApp
+                        </a>
+
+                        <!-- Instagram Link -->
+                        <a href="https://www.instagram.com/ap31_homeinspections?igsh=MnhlZWxwZXY4ampp" target="_blank" class="flex items-center hover:text-secondary transition duration-300">
+                            <svg class="w-6 h-6 mr-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            Follow Our Work on Instagram
+                        </a>
+                        
+                        <!-- Email Address -->
+                        <p class="flex items-center">
+                            <svg class="w-6 h-6 mr-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-1 12H4a2 2 0 01-2-2V6a2 2 0 012-2h16a2 2 0 012 2v12a2 2 0 01-2 2z"></path></svg>
+                            contact@ap31inspections.in
+                        </p>
+                        
+                        <!-- Address -->
+                        <p class="flex items-start">
+                            <svg class="flex-shrink-0 w-6 h-6 mr-3 text-accent mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            <span class="flex-1">Serving Visakhapatnam, Andhra Pradesh 530003</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 class="text-2xl font-extrabold text-secondary mb-4">AP31 Home Inspections</h3>
+            <div class="flex justify-center space-x-6 text-sm mb-6">
+                <a href="#home" class="hover:text-primary transition duration-300">Home</a>
+                <a href="#featured-services" class="hover:text-primary transition duration-300">Highlights</a>
+                <a href="#services" class="hover:text-primary transition duration-300">Services</a>
+                <a href="#whyus" class="hover:text-primary transition duration-300">Why Choose Us</a>
+                <a href="#contact" class="hover:text-primary transition duration-300">Schedule Now</a>
+            </div>
+            <p class="text-gray-400 text-sm mb-2">© 2024 AP31 Home Inspections. All rights reserved. | Specializing in property assessments for Visakhapatnam (Vizag).</p>
+            <p id="full-user-id-display" class="text-xs text-gray-500 break-all">User ID Loading...</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Firebase, Mobile Menu, Carousel, and Theme Change -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Set log level for debugging Firebase operations
+        setLogLevel('Debug');
+
+        let db;
+        let auth;
+        let currentUserId = null;
+        
+        // Retrieve global variables
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+        // --- Firebase Initialization and Auth Setup ---
+        if (Object.keys(firebaseConfig).length > 0) {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // 1. Initial Authentication
+            async function initializeAuth() {
+                try {
+                    const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                    if (token) {
+                        await signInWithCustomToken(auth, token);
+                        console.log("Firebase: Signed in with custom token.");
+                    } else {
+                        await signInAnonymously(auth);
+                        console.log("Firebase: Signed in anonymously.");
+                    }
+                } catch (error) {
+                    console.error("Firebase Auth Error:", error);
+                }
+            }
+
+            // 2. Auth State Listener to set currentUserId
+            onAuthStateChanged(auth, (user) => {
+                const userIdDisplay = document.getElementById('full-user-id-display');
+                if (user) {
+                    currentUserId = user.uid;
+                    userIdDisplay.textContent = `User ID: ${currentUserId}`;
+                } else {
+                    currentUserId = null;
+                    // Fallback to random ID if anonymous sign-in failed or user signed out
+                    currentUserId = crypto.randomUUID(); 
+                    userIdDisplay.textContent = `User ID: Anonymous/Fallback (${currentUserId})`;
+                }
+            });
+
+            initializeAuth();
+        } else {
+            console.error("Firebase config is missing. Data saving will be disabled.");
+        }
+
+
+        // --- Form Submission Handler (Using Firestore) ---
+        document.getElementById('inspection-form').addEventListener('submit', handleFormSubmit);
+
+        /**
+         * Handles the form submission, saving the request data to Firestore.
+         */
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('inspection-form');
+            const submitButton = document.getElementById('submit-button');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const confirmationMessage = document.getElementById('confirmation-message');
+            const errorMessage = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+
+            // Hide previous messages
+            confirmationMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+
+            if (!db || !currentUserId) {
+                errorText.textContent = "Database connection or user authentication is not ready. Please wait a moment and try again.";
+                errorMessage.classList.remove('hidden');
+                errorMessage.scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            // Show loading state and disable button
+            submitButton.disabled = true;
+            submitButton.classList.add('opacity-50');
+            loadingSpinner.classList.remove('hidden');
+
+            try {
+                const requestData = {
+                    name: document.getElementById('name').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                    propertyType: document.getElementById('property-type').value,
+                    locationDetails: document.getElementById('message').value,
+                    // Mandatory Firestore metadata
+                    appId: appId,
+                    userId: currentUserId,
+                    timestamp: serverTimestamp()
+                };
+
+                // Construct the private data path: /artifacts/{appId}/users/{userId}/inspection_requests
+                const requestsCollectionRef = collection(db, 'artifacts', appId, 'users', currentUserId, 'inspection_requests');
+
+                // Retry logic for API call with exponential backoff (max 3 retries)
+                const maxRetries = 3;
+                let attempt = 0;
+                let success = false;
+                
+                while (attempt < maxRetries && !success) {
+                    try {
+                        await addDoc(requestsCollectionRef, requestData);
+                        success = true;
+                    } catch (e) {
+                        attempt++;
+                        if (attempt < maxRetries) {
+                            const delay = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                        } else {
+                            throw e; // Re-throw error after final failed attempt
+                        }
+                    }
+                }
+
+                // Success: Show confirmation and reset form
+                confirmationMessage.classList.remove('hidden');
+                form.reset();
+                confirmationMessage.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error("Firestore Submission Error:", error);
+                errorText.textContent = `Error saving request: ${error.message}. The submission failed.`;
+                errorMessage.classList.remove('hidden');
+                errorMessage.scrollIntoView({ behavior: 'smooth' });
+            } finally {
+                // Hide loading state and re-enable button
+                loadingSpinner.classList.add('hidden');
+                submitButton.disabled = false;
+                submitButton.classList.remove('opacity-50');
+            }
+        }
+
+
+        // --- Mobile Menu Toggle ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on link click (for smooth scrolling)
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+
+        // --- Carousel Logic (No change) ---
+        let slideIndex = 1;
+        let slideTimer;
+        const SLIDE_INTERVAL = 5000; // 5 seconds
+
+        function plusSlides(n) {
+            clearTimeout(slideTimer);
+            showSlides(slideIndex += n);
+            slideTimer = setTimeout(autoSlide, SLIDE_INTERVAL);
+        }
+
+        function currentSlide(n) {
+            clearTimeout(slideTimer);
+            showSlides(slideIndex = n);
+            slideTimer = setTimeout(autoSlide, SLIDE_INTERVAL);
+        }
+
+        function showSlides(n) {
+            const slides = document.getElementsByClassName("slide");
+            const dots = document.getElementsByClassName("dot");
+
+            if (slides.length === 0) return;
+
+            if (n > slides.length) { slideIndex = 1 } 
+            if (n < 1) { slideIndex = slides.length }
+
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active-dot", "");
+            }
+
+            slides[slideIndex - 1].style.display = "flex"; 
+            dots[slideIndex - 1].className += " active-dot";
+        }
+
+        function autoSlide() {
+            showSlides(slideIndex += 1);
+            slideTimer = setTimeout(autoSlide, SLIDE_INTERVAL);
+        }
+
+        function initializeCarousel() {
+            const slides = document.getElementsByClassName("slide");
+            const dotContainer = document.getElementById("dot-container");
+
+            for (let i = 0; i < slides.length; i++) {
+                const dot = document.createElement("span");
+                dot.className = "dot";
+                dot.setAttribute("onclick", `currentSlide(${i + 1})`);
+                dotContainer.appendChild(dot);
+            }
+
+            window.plusSlides = plusSlides;
+            window.currentSlide = currentSlide;
+            
+            showSlides(slideIndex);
+            slideTimer = setTimeout(autoSlide, SLIDE_INTERVAL);
+        }
+
+
+        // --- Scroll-based Theme Change Logic (New) ---
+        const root = document.documentElement;
+        let isDarkTheme = false;
+
+        /**
+         * Applies the specified theme by setting CSS root variables.
+         * @param {boolean} isDark - True to apply dark theme, false for light theme.
+         */
+        function applyTheme(isDark) {
+            if (isDark) {
+                // Apply Dark Theme
+                root.style.setProperty('--bg-main', `var(--dark-bg-main-r), var(--dark-bg-main-g), var(--dark-bg-main-b)`);
+                root.style.setProperty('--bg-card', `var(--dark-bg-card-r), var(--dark-bg-card-g), var(--dark-bg-card-b)`);
+                root.style.setProperty('--text-main', `var(--dark-text-main-r), var(--dark-text-main-g), var(--dark-text-main-b)`);
+                root.style.setProperty('--text-heading', `var(--dark-text-heading-r), var(--dark-text-heading-g), var(--dark-text-heading-b)`);
+                root.style.setProperty('--shadow-current', `var(--shadow-dark)`);
+            } else {
+                // Apply Light Theme
+                root.style.setProperty('--bg-main', `var(--light-bg-main-r), var(--light-bg-main-g), var(--light-bg-main-b)`);
+                root.style.setProperty('--bg-card', `var(--light-bg-card-r), var(--light-bg-card-g), var(--light-bg-card-b)`);
+                root.style.setProperty('--text-main', `var(--light-text-main-r), var(--light-text-main-g), var(--light-text-main-b)`);
+                root.style.setProperty('--text-heading', `var(--light-text-heading-r), var(--light-text-heading-g), var(--light-text-heading-b)`);
+                root.style.setProperty('--shadow-current', `var(--shadow-light)`);
+            }
+            isDarkTheme = isDark;
+        }
+
+        let isTicking = false;
+
+        /**
+         * Checks scroll position and toggles the theme if the 80% threshold is crossed.
+         */
+        function handleScrollThemeChange() {
+            if (!isTicking) {
+                window.requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    // Total scrollable height (document height minus viewport height)
+                    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    
+                    let scrollPercent = 0;
+                    if (totalHeight > 0) {
+                        scrollPercent = (scrollY / totalHeight) * 100;
+                    }
+
+                    // Theme switches when scrolled past 80%
+                    const darkThreshold = 80; 
+
+                    if (scrollPercent >= darkThreshold) {
+                        if (!isDarkTheme) {
+                            applyTheme(true);
+                        }
+                    } else {
+                        if (isDarkTheme) {
+                            applyTheme(false);
+                        }
+                    }
+                    isTicking = false;
+                });
+                isTicking = true;
+            }
+        }
+
+        // Initialize carousel and theme on load
+        window.addEventListener('load', () => {
+            initializeCarousel();
+            handleScrollThemeChange(); // Initial check
+        });
+        
+        // Listen for scroll events efficiently
+        window.addEventListener('scroll', handleScrollThemeChange);
+
+    </script>
+</body>
+</html>
